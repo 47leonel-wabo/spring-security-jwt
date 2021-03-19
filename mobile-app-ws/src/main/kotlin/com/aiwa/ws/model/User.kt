@@ -1,7 +1,7 @@
 package com.aiwa.ws.model
 
 class User(
-        val id: Long,
+        val id: String,
         val firstName: String,
         val lastName: String,
         val email: String
