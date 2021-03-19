@@ -1,0 +1,9 @@
+server:
+  port: 0 # Automatic port assign
+spring:
+  application:
+    name: users-ws # Name of this application
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhsot:8010/eureka # URL of the server service configure earlier
