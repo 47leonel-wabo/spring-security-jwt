@@ -1,6 +1,7 @@
 package com.aiwa.ws.controller
 
 import com.aiwa.ws.model.User
+import com.aiwa.ws.model.request.UpdateDetails
 import com.aiwa.ws.model.request.UserDetails
 import com.aiwa.ws.toUser
 import org.springframework.http.HttpStatus
@@ -36,11 +37,48 @@ class AppController {
             @RequestParam(name = "sort", defaultValue = "DESC", required = false) sort: String
     ): String = "get users called on page $page, and limit to $limit, sort order $sort"
 
-    @PutMapping
-    fun update(): String = "update user called"
+    @PutMapping(
+            path = ["/{userId}"],
+            consumes = [
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+            ],
+            produces = [
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+            ]
+    )
+    fun update(@PathVariable userId: String, @Valid @RequestBody updateDetails: UpdateDetails): ResponseEntity<Any> {
+        return if (users.isNotEmpty() && users.containsKey(userId)) {
 
-    @DeleteMapping
-    fun delete(): String = "delete user called"
+            val user = users[userId]
+            user?.firstName = updateDetails.firstName
+            user?.lastName = updateDetails.lastName
+
+            user?.let {
+                users.put(userId, it)
+            }
+
+            ResponseEntity(user, HttpStatus.OK)  // This las instruction iis considered as return
+        } else
+            ResponseEntity("No Resources", HttpStatus.BAD_REQUEST)
+    }
+
+    @DeleteMapping(
+            path = ["/{userId}"],
+            produces = [
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+            ]
+    )
+    fun delete(@PathVariable userId: String): ResponseEntity<Any> {
+        return if (users.isNotEmpty() && users.containsKey(userId)) {
+            val user = users.remove(userId)
+            ResponseEntity("User with id $userId removed", HttpStatus.OK)  // This las instruction iis considered as return
+        } else
+            ResponseEntity("No Resources", HttpStatus.BAD_REQUEST)
+
+    }
 
     @PostMapping(
             consumes = [
