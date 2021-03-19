@@ -1,5 +1,6 @@
 package com.aiwa.ws.controller
 
+import com.aiwa.ws.exceptions.service.UserServiceException
 import com.aiwa.ws.model.User
 import com.aiwa.ws.model.request.UpdateDetails
 import com.aiwa.ws.model.request.UserDetails
@@ -26,16 +27,17 @@ class AppController {
     fun fetchUser(@PathVariable userId: String): ResponseEntity<Any> {
         return if (users.isNotEmpty() && users.containsKey(userId))
             ResponseEntity(users.getValue(userId), HttpStatus.OK)
-        else ResponseEntity(HttpStatus.NOT_FOUND)
+        else throw UserServiceException("Resource fetched not found")
     }
-
 
     @GetMapping
     fun fetchUsers(
             @RequestParam(name = "page") page: Int,
             @RequestParam(name = "limit", defaultValue = "20") limit: Int,
             @RequestParam(name = "sort", defaultValue = "DESC", required = false) sort: String
-    ): String = "get users called on page $page, and limit to $limit, sort order $sort"
+    ): String {
+        return "get users called on page $page, and limit to $limit, sort order $sort"
+    }
 
     @PutMapping(
             path = ["/{userId}"],
@@ -61,7 +63,7 @@ class AppController {
 
             ResponseEntity(user, HttpStatus.OK)  // This las instruction iis considered as return
         } else
-            ResponseEntity("No Resources", HttpStatus.BAD_REQUEST)
+            throw UserServiceException("Resource not found")
     }
 
     @DeleteMapping(
