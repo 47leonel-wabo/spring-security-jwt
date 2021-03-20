@@ -1,0 +1,9 @@
+server:
+  port: 0 # Automatic assign
+spring:
+  application:
+    name: account-management-ws # Name of the micro-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8010/eureka # Eureka server URL
