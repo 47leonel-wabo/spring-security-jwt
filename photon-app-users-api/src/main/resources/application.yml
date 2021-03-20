@@ -1,5 +1,5 @@
 server:
-  port: 0 # Automatic port assign
+  port: ${PORT:0} # Automatic port assign
 spring:
   application:
     name: users-ws # Name of this application
@@ -7,3 +7,5 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8010/eureka # URL of the server service configured earlier
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
