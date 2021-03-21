@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: users-ws # Name of this application
+  profiles:
+    active: dev
 eureka:
   client:
     service-url:
