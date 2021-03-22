@@ -11,3 +11,4 @@ eureka:
       defaultZone: http://localhost:8010/eureka # URL of the server service configured earlier
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+gateway.ip: 192.168.43.191
