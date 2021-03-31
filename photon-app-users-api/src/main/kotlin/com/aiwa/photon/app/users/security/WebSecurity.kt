@@ -28,6 +28,8 @@ class WebSecurity(val env: Environment, val userService: UserService, val bCrypt
     }
 
     private fun getAuthenticationFilter(): AuthenticationFilter =
-            AuthenticationFilter().apply { authenticationManager() }
+            AuthenticationFilter().apply {
+                authenticationManager()
+            }
 
 }
