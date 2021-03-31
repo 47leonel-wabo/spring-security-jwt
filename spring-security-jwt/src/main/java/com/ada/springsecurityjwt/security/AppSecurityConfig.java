@@ -24,6 +24,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(mUserDetailsService);
     }
 
+    /*
+        As we use a hard coded user detail no need for valid password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
