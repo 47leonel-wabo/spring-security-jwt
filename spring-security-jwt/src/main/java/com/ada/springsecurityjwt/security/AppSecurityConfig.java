@@ -1,6 +1,7 @@
 package com.ada.springsecurityjwt.security;
 
 import com.ada.springsecurityjwt.security.configs.UserDetailsServiceImpl;
+import com.ada.springsecurityjwt.security.filter.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -16,10 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl mUserDetailsService;
+    private final RequestFilter mJwtRequestFilter;
 
     @Autowired
-    public AppSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public AppSecurityConfig(UserDetailsServiceImpl userDetailsService, RequestFilter jwtRequestFilter) {
         mUserDetailsService = userDetailsService;
+        mJwtRequestFilter = jwtRequestFilter;
     }
 
     @Override
@@ -32,7 +36,12 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests().mvcMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                // Disable session management
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // Add our filter before any request
+        http.addFilterBefore(mJwtRequestFilter, RequestFilter.class);
     }
 
     /*
